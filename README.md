@@ -4,22 +4,51 @@ Laboratorio educativo de aprendizaje automático real. HTML, CSS y módulos Java
 
 ## Ejecutar localmente
 
-En esta computadora las dependencias ya están instaladas. Puedes abrir `iniciar.cmd` con doble clic y visitar http://localhost:3000. El lanzador usa Node.js del sistema o el runtime local de Codex si está disponible. Si ya hay un servidor abierto en ese puerto, utiliza la instancia existente.
-
-Requiere Node.js 20 o posterior y npm (incluido en la instalación estándar de Node.js).
+Requiere Git, Node.js 20 o posterior y npm. Los siguientes comandos sirven en Windows y Ubuntu:
 
 ```sh
+git clone https://github.com/dannysv777/NeuroIA.git
+cd NeuroIA
 npm install
 npm start
 ```
 
-Abrir http://localhost:3000. Para desarrollar con reinicio automático del servidor: `npm run dev`. Para pruebas: `npm test`. También se puede usar `pnpm install --ignore-scripts` y `pnpm start`; se incluye pnpm-lock.yaml para fijar dependencias transitivas. Las dependencias usadas no requieren scripts de instalación.
+Abrir http://localhost:3000. Si ya tienes el proyecto, entra a su carpeta y omite `git clone` y `cd NeuroIA`.
+
+- `npm start`: inicia el servidor.
+- `npm run dev`: reinicia el servidor automáticamente al cambiar archivos.
+- `npm test`: ejecuta las pruebas matemáticas del aprendizaje.
+
+Actualmente se conserva `pnpm-lock.yaml` y no existe `package-lock.json`. Por eso la primera instalación con npm usa `npm install`, no `npm ci`. Si se adopta npm como gestor, conserva y sube el `package-lock.json` que genere; después usa `npm ci` para instalaciones reproducibles. No borres un archivo de bloqueo existente. Para reproducir las versiones ya fijadas con pnpm, usa `pnpm install --frozen-lockfile --ignore-scripts` y `pnpm start`.
+
+En Windows también puedes abrir `iniciar.cmd` con doble clic después de instalar las dependencias. Es un lanzador opcional; Ubuntu utiliza `npm start` y no depende de ese archivo ni de Codex.
 
 Las librerías se sirven desde node_modules: después de la instalación no hace falta internet. No abrir index.html directamente, porque el Worker necesita HTTP. Mantén la terminal del servidor abierta; Ctrl+C lo detiene.
 
+## Puerto y Ubuntu
+
+El puerto predeterminado es 3000 y se puede cambiar con `PORT`. El servidor escucha en `127.0.0.1`, apropiado para Cloudflare Tunnel en el mismo servidor.
+
+Ubuntu:
+
+```sh
+PORT=3001 npm start
+```
+
+PowerShell:
+
+```powershell
+$env:PORT = '3001'
+npm start
+```
+
+Para comprobar el servicio, abre `/health` en el puerto elegido. En Ubuntu: `curl http://127.0.0.1:3000/health` si usas el puerto predeterminado. Las variables se leen del entorno; el servidor no carga archivos `.env` automáticamente. Para escuchar en otras interfaces se puede establecer `HOST=0.0.0.0`; no es necesario para un túnel local.
+
+Consulta [el procedimiento de Ubuntu](docs/deployment.md). No copies `node_modules` de Windows: instala las dependencias en Ubuntu. El entrenamiento se realiza en el navegador; no hace falta GPU en el servidor.
+
 ## Primera demostración
 
-1. Abre el laboratorio y pulsa **Entrenar modelo** sobre los dos grupos iniciales.
+1. Abre el laboratorio y selecciona **Explorar con puntos**. Pulsa **Entrenar modelo** sobre los dos grupos iniciales.
 2. Observa pérdida, precisión y fondo del plano durante las 200 épocas.
 3. Selecciona **Probar** y toca nuevas posiciones para obtener P(A) y P(B).
 4. Carga **XOR** o **Círculos**, entrena y observa una frontera no lineal.
@@ -53,7 +82,7 @@ La precisión es de entrenamiento, no de validación. Las probabilidades no est�
 
 ## Alcance
 
-MVP local: inicio, clasificación, edición de datos, entrenamiento, parada, métricas y predicciones. No hay cuentas, base de datos, envío de puntos al servidor ni ejecución de código del usuario. Laboratorio de programación y reconocimiento de dibujos pendientes para fases posteriores. Cloudflare no está configurado en esta etapa.
+Incluye inicio, clasificación, edición de datos, entrenamiento, parada, métricas, predicciones, prueba lógica guiada y código educativo con cálculo de neuronas y aprendizaje de suma. No hay cuentas, base de datos, envío de puntos al servidor ni ejecución arbitraria de código del usuario. Reconocimiento de dibujos pendiente para una fase posterior. Cloudflare no está configurado en esta etapa.
 
 ## Prueba lógica guiada
 
@@ -72,4 +101,16 @@ Pruebas del navegador opcionales: con Playwright disponible, ejecutar `node test
 
 ## GitHub
 
-NeuroIA tiene su propio repositorio local en esta carpeta. No se ha configurado un remoto ni publicado. Al crear un repositorio vacío en GitHub, comparte su URL para conectarlo y subirlo. No incluyas node_modules, .env, registros ni capturas de pruebas: ya están excluidos por .gitignore.
+El repositorio ya está inicializado en la rama `main` y conectado a https://github.com/dannysv777/NeuroIA.git. No es necesario repetir `git init` ni `git remote add`.
+
+Para subir cambios desde la carpeta del proyecto:
+
+```sh
+git status
+git add .gitignore README.md docs/deployment.md
+git diff --cached
+git commit -m "Documentar instalacion y preparar despliegue en Ubuntu"
+git push origin main
+```
+
+`.gitignore` excluye dependencias, variables de entorno, archivos comunes de credenciales y claves privadas, registros y temporales. Permite plantillas `.env.example` y `.env.sample`, que deben contener solo valores ficticios. Las exclusiones no detectan contraseñas escritas dentro del código ni dejan de rastrear archivos ya versionados: revisa el diff antes de publicar. Esta aplicación no necesita contraseñas ni tokens para funcionar.
