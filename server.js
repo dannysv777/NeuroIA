@@ -1,0 +1,12 @@
+import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+app.disable('x-powered-by');
+app.get('/vendor/tf.min.js', (_, res) => res.sendFile('tf.min.js', { root: path.join(root, 'node_modules/@tensorflow/tfjs/dist') }));
+app.get('/vendor/chart.umd.js', (_, res) => res.sendFile('chart.umd.js', { root: path.join(root, 'node_modules/chart.js/dist') }));
+app.get('/health', (_, res) => res.json({ status: 'ok', app: 'NeuroIA' }));
+app.use(express.static(path.join(root, 'public')));
+const port = Number(process.env.PORT || 3000);
+app.listen(port, process.env.HOST || '127.0.0.1', () => console.log(`NeuroIA: http://localhost:${port}`));

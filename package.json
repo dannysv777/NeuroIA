@@ -1,0 +1,7 @@
+{
+  "name": "neuroia", "version": "0.1.0", "private": true, "type": "module",
+  "description": "Laboratorio educativo de redes neuronales en el navegador",
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "test": "node --test tests/model.test.js tests/arithmetic.test.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "@tensorflow/tfjs": "4.22.0", "chart.js": "4.4.8", "express": "5.1.0" }
+}
