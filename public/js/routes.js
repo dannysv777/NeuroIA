@@ -6,9 +6,9 @@ const views = new Map([
 const homeCards = document.createElement('div');
 homeCards.className = 'home-cards';
 homeCards.innerHTML = `
-  <a class="destination-card" href="#laboratorio"><span>01 / EXPERIMENTA</span><h2>Enseña a tu IA <b>↗</b></h2><p>Empieza con los interruptores o crea tus propios ejemplos en el plano.</p><strong>Entrar al laboratorio →</strong></a>
-  <a class="destination-card" href="#dentro"><span>02 / DESCUBRE</span><h2>Mira el código <b>↗</b></h2><p>Calcula una neurona paso a paso y entrena un modelo que aprenda a sumar.</p><strong>Explorar por dentro →</strong></a>
-  <a class="destination-card" href="#como-funciona"><span>03 / COMPRENDE</span><h2>Conecta las ideas <b>↗</b></h2><p>Qué son los datos, cómo guía el error y qué significa una predicción.</p><strong>Conocer los conceptos →</strong></a>`;
+  <a class="destination-card" href="#laboratorio"><h2>Laboratorio <b>↗</b></h2><p>Empieza con los interruptores o crea tus propios ejemplos en el plano.</p></a>
+  <a class="destination-card" href="#dentro"><h2>Dentro de la IA <b>↗</b></h2><p>Calcula una neurona paso a paso y entrena un modelo que aprenda a sumar.</p></a>
+  <a class="destination-card" href="#como-funciona"><h2>Cómo funciona <b>↗</b></h2><p>Entiende los datos de entrenamiento, el ajuste de pesos y la evaluación de las predicciones.</p></a>`;
 document.getElementById('inicio').append(homeCards);
 const aboutAccess = document.createElement('div');
 aboutAccess.className = 'home-about-link';

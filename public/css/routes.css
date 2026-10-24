@@ -35,3 +35,4 @@ header nav a[aria-current='page'] {
   .destination-card { padding: 20px; }
   .destination-card h2 { margin: 8px 0; }
 }
+.hero-content > p { max-width: 620px; } .destination-card h2 { margin-top: 0; } .destination-card p { margin-bottom: 0; }

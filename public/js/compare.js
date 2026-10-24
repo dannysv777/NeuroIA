@@ -8,8 +8,8 @@ tab.id = 'compare-tab'; tab.className = 'button secondary'; tab.textContent = 'C
 modes.append(tab);
 const panel = document.createElement('section'); panel.id = 'comparison'; panel.hidden = true;
 panel.innerHTML = `
-  <div class="compare-heading"><div><h2>Dos IA. El mismo reto.</h2><p>Cambia un parámetro y observa qué aprende cada una.</p></div><label>Elige un reto<select id="compare-task"><option value="xor">Separar esquinas</option><option value="rings">Reconocer círculos</option></select></label></div>
-  <div class="challenge-brief"><span class="challenge-label">TU RETO</span><p id="challenge-text">Consigue que al menos una IA acierte 72 de 80 ejemplos nuevos.</p><details><summary>Ver una pista</summary><p id="challenge-hint">Las esquinas del mismo color están en diagonal. Una línea recta no basta: prueba más neuronas.</p></details></div>
+  <div class="compare-heading"><div><h2>Comparación de modelos</h2><p>Cambia un parámetro y observa qué aprende cada una.</p></div><label>Elige un reto<select id="compare-task"><option value="xor">Separar esquinas</option><option value="rings">Reconocer círculos</option></select></label></div>
+  <div class="challenge-brief"><p id="challenge-text">Consigue que al menos una IA acierte 72 de 80 ejemplos nuevos.</p><details><summary>Ver una pista</summary><p id="challenge-hint">Las esquinas del mismo color están en diagonal. Una línea recta no basta: prueba más neuronas.</p></details></div>
   <div class="compare-grid">${['a', 'b'].map((id, i) => `
     <article class="panel compare-model"><h3>IA ${id.toUpperCase()}</h3><div class="compare-settings"><label>Neuronas<select id="compare-neurons-${id}">${[4,8,16,32].map(n=>`<option${n===(i?16:4)?' selected':''}>${n}</option>`).join('')}</select></label><label>Aprendizaje<select id="compare-rate-${id}"><option>0.001</option><option selected>0.03</option><option>0.1</option></select></label></div>
     <canvas id="compare-plane-${id}" width="600" height="360" aria-label="Frontera aprendida por la IA ${id.toUpperCase()}"></canvas>
