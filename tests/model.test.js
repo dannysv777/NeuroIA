@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as tf from '@tensorflow/tfjs';
 import { dataset, validate } from '../public/js/dataset.js';
-import { createModel, train, predict, boundary, inspect } from '../public/js/model.js';
+import { createModel, train, predict, boundary, inspect, evaluateExamples } from '../public/js/model.js';
 const config = { neurons: 8, rate: .03, epochs: 100, seed: 42 };
 test('datos reproducibles y entradas inválidas rechazadas', () => {
   assert.deepEqual(dataset('xor', 42), dataset('xor', 42));
@@ -30,6 +30,14 @@ test('aprende patrones lineales y no lineales; repite predicciones y libera tens
     assert.ok(predictions.every(p => p >= 0 && p <= 1));
     if (kind === 'clusters') { if (previous) assert.deepEqual(predictions, previous); previous = predictions; }
     assert.equal(boundary(tf, model).values.length, 1600);
+    const heldOut = dataset(kind, 2026);
+    const seen = new Set(dataset(kind).map(p => `${p.x},${p.y}`));
+    assert.ok(heldOut.every(p => !seen.has(`${p.x},${p.y}`)));
+    const evaluation = evaluateExamples(tf, model, heldOut);
+    const outputs = predict(tf, model, heldOut.map(p => [p.x,p.y]));
+    assert.equal(evaluation.correct, outputs.filter((p,i) => Number(p >= .5) === heldOut[i].label).length);
+    assert.equal(evaluation.total, 80);
+    assert.equal(evaluation.accuracy, evaluation.correct / 80);
     console.log(kind, metrics.at(-1));
     model.optimizer.dispose(); model.dispose();
   }

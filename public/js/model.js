@@ -23,6 +23,11 @@ export async function train(tf, model, points, config, onEpoch) {
 export function predict(tf, model, points) {
   return tf.tidy(() => Array.from(model.predict(tf.tensor2d(points)).dataSync()));
 }
+export function evaluateExamples(tf, model, points) {
+  const probabilities = predict(tf, model, points.map(p => [p.x, p.y]));
+  const correct = probabilities.filter((p, i) => Number(p >= .5) === points[i].label).length;
+  return { correct, total: points.length, accuracy: correct / points.length };
+}
 // Lectura de activaciones y pesos del mismo modelo que se está entrenando.
 export function inspect(tf, model, points) {
   return tf.tidy(() => {

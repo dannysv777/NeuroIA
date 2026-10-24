@@ -114,3 +114,15 @@ git push origin main
 ```
 
 `.gitignore` excluye dependencias, variables de entorno, archivos comunes de credenciales y claves privadas, registros y temporales. Permite plantillas `.env.example` y `.env.sample`, que deben contener solo valores ficticios. Las exclusiones no detectan contraseñas escritas dentro del código ni dejan de rastrear archivos ya versionados: revisa el diff antes de publicar. Esta aplicación no necesita contraseñas ni tokens para funcionar.
+
+## Navegación por apartados
+
+La barra muestra una vista a la vez: `/#inicio`, `/#laboratorio`, `/#dentro` y `/#como-funciona`. Son vistas de la misma aplicación con enlaces propios: no se recarga al navegar y funcionan Atrás y Adelante. Dentro de la IA tiene pestañas para la neurona y la suma. El laboratorio conserva sus modos guiado y libre.
+
+Al salir de un apartado se solicita detener su entrenamiento al terminar la época actual. Los datos, las métricas y el modelo permanecen en memoria para volver a consultarlos; iniciar otro entrenamiento comienza de nuevo. Recargar o cerrar la página sí reinicia la sesión. La prueba de navegación opcional es `node tests/routes-check.cjs`, con Playwright y el servidor local activo.
+
+## Comparación y retos
+
+En Laboratorio → Comparar dos IA, ambas redes usan los mismos 80 puntos, 120 épocas y semilla 42. Se pueden modificar neuronas y tasa de aprendizaje. Los retos «Separar esquinas» y «Reconocer círculos» piden alcanzar 72 aciertos sobre 80 ejemplos de validación generados con semilla 2026; esos puntos no se usan para entrenar. Solo se declara el reto logrado cuando ambas ejecuciones terminan; detenerlas conserva resultados parciales. Las conclusiones son específicas de este experimento, no un ranking general. Pistas y metodología quedan plegadas para mantener la pantalla sencilla.
+
+La vista `/#acerca-de-mi` contiene los datos del autor proporcionados por Dany S y su enlace de Instagram. La prueba opcional `node tests/compare-check.cjs` comprueba la comparación, las transiciones y esta vista en móvil.

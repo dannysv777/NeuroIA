@@ -87,3 +87,8 @@ render(); network();
 window.addEventListener('pagehide', () => worker?.terminate());
 import './guided.js';
 import './inside.js';
+import './glass.js';
+import './navigation.js';
+import './compare.js';
+import './about.js';
+import './routes.js';

@@ -1,0 +1,39 @@
+/* La cabecera conserva su espacio inicial y se compacta sin mover la página. */
+:root { --nav-height: 82px; }
+html { scroll-padding-top: calc(var(--nav-height) + 12px); }
+body { padding-top: 82px; }
+header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: 82px;
+  background: rgba(13, 13, 23, .96);
+  border-bottom: 1px solid rgba(207, 192, 245, .18);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .15);
+  transition: height .2s ease, box-shadow .2s ease;
+}
+header.compact { height: 62px; box-shadow: 0 8px 28px rgba(0, 0, 0, .32); }
+header .brand { transition: font-size .2s ease; }
+header.compact .brand { font-size: 21px; }
+header nav { align-items: center; gap: 18px; }
+header nav a { display: inline-flex; align-items: center; min-height: 36px; padding: 5px 8px; white-space: nowrap; }
+@media (max-width: 680px) {
+  :root { --nav-height: 108px; }
+  body { padding-top: 108px; }
+  header { height: 108px; padding: 10px 4%; flex-direction: column; justify-content: center; gap: 4px; }
+  header.compact { height: 94px; }
+  header .brand, header.compact .brand { font-size: 18px; }
+  header .brand-icon { font-size: 24px; }
+  header nav { width: 100%; justify-content: center; gap: 3px; }
+  header nav a, header nav a[href='#como-funciona'], header nav a:last-child {
+    display: inline-flex;
+    font-size: 11px;
+    padding: 4px 5px;
+    min-height: 38px;
+  }
+}
+@media (max-width: 360px) {
+  header nav { gap: 0; }
+  header nav a, header nav a[href='#como-funciona'], header nav a:last-child { font-size: 10px; padding-inline: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { header, header .brand { transition: none; } }

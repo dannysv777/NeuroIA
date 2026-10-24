@@ -8,7 +8,7 @@ const fs = require('node:fs');
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3000/#laboratorio');
     await page.locator('#free-tab').click();
     await page.locator('#train').click();
     await page.waitForFunction(() => document.getElementById('phase').textContent === 'Modelo entrenado', null, { timeout: 60000 });

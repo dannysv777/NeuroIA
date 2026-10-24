@@ -8,7 +8,7 @@ const assert = require('node:assert/strict');
   await page.locator('[data-step="1"]').click();assert.match(await page.locator('#neuron-result').textContent(),/= 1.7/);
   await page.locator('[data-step="2"]').click();assert.match(await page.locator('#neuron-result').textContent(),/0.9354/);
   await page.locator('#n-a').fill('');assert.match(await page.locator('#neuron-result').textContent(),/Introduce/);await page.locator('#n-a').fill('2');
-  await page.locator('#sum-slow').uncheck();await page.locator('#sum-train').click();
+  await page.locator('#addition-tab').click();await page.locator('#sum-slow').uncheck();await page.locator('#sum-train').click();
   await page.waitForFunction(()=>document.getElementById('sum-state').textContent.startsWith('Entrenamiento terminado'));
   assert.ok(Number(await page.locator('#sum-error').textContent())<.05);
   await page.locator('#sum-a').fill('-5');await page.locator('#sum-b').fill('8');assert.equal(await page.locator('#sum-exact').textContent(),'3');assert.ok(Number(await page.locator('#sum-error').textContent())<.05);

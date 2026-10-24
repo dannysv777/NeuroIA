@@ -21,6 +21,7 @@ onmessage = async ({ data }) => {
     if (data.probes && data.delay) await new Promise(resolve => setTimeout(resolve, 700));
     await engine.train(tf, model, data.points, data.config, async metrics => {
       if (stopRequested) model.stopTraining = true;
+      if (data.validation) metrics.validation = engine.evaluateExamples(tf, model, data.validation);
       postMessage({ type: 'epoch', ...metrics, trace: data.probes ? engine.inspect(tf, model, data.probes) : null, boundary: !data.probes && (metrics.epoch % 5 === 0 || metrics.epoch === 1) ? engine.boundary(tf, model) : null });
       if (data.delay) await new Promise(resolve => setTimeout(resolve, Math.min(200, data.delay)));
     });

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
-    await page.goto('http://localhost:3000');
+    await page.goto('http://localhost:3000/#laboratorio');
     assert.equal(await page.locator('.lab-layout').isVisible(), false);
     await page.locator('#guide-speed').selectOption('0');
     await page.locator('#guide-train').click();
