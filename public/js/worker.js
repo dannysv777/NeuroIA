@@ -25,7 +25,7 @@ onmessage = async ({ data }) => {
       postMessage({ type: 'epoch', ...metrics, trace: data.probes ? engine.inspect(tf, model, data.probes) : null, boundary: !data.probes && (metrics.epoch % 5 === 0 || metrics.epoch === 1) ? engine.boundary(tf, model) : null });
       if (data.delay) await new Promise(resolve => setTimeout(resolve, Math.min(200, data.delay)));
     });
-    postMessage({ type: 'done', boundary: engine.boundary(tf, model) });
+    postMessage({ type: 'done', boundary: engine.boundary(tf, model), evaluation: engine.evaluateExamples(tf, model, data.points) });
   } catch (error) { postMessage({ type: 'error', message: error.message || 'No se pudo entrenar el modelo.' }); }
   finally { if (data.type === 'train') busy = false; }
 };

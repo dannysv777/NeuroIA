@@ -68,6 +68,7 @@ function renderRoute({ focus = true } = {}) {
   }
   window.scrollTo({ top: 0, behavior: 'instant' });
   resizeCharts(view);
+  document.dispatchEvent(new CustomEvent('neuroia:viewchange', { detail: route }));
 }
 // Controlar el clic evita que el navegador desplace hacia una vista aún oculta.
 document.addEventListener('click', event => {

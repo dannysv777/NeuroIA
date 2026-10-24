@@ -1,6 +1,7 @@
 import { dataset, validate } from './dataset.js';
 import { Plane } from './canvas.js';
 import { createChart } from './charts.js';
+import { classificationSummary } from './results.js';
 const $ = id => document.getElementById(id);
 const svgNS = 'http://www.w3.org/2000/svg';
 for (let i = 0; i < 30; i++) {
@@ -10,6 +11,9 @@ for (let i = 0; i < 30; i++) {
 }
 let points = dataset(), mode = '0', worker, training = false, trained = false, stopped = false, chart;
 const plane = new Plane($('plane'), onPoint);
+const resultSummary = document.createElement('p');
+resultSummary.id = 'result-summary'; resultSummary.className = 'result-summary'; resultSummary.hidden = true; resultSummary.setAttribute('role', 'status');
+document.querySelector('.metrics').before(resultSummary);
 const config = () => ({ neurons: Number($('neurons').value), rate: Number($('rate').value), epochs: Number($('epochs').value), seed: Number($('seed').value) });
 function message(text, error = false) { $('message').textContent = text; $('message').classList.toggle('error', error); }
 function render() { plane.points = points; plane.draw(); $('point-count').textContent = points.length; $('count-a').textContent = points.filter(p => p.label === 0).length; $('count-b').textContent = points.filter(p => p.label === 1).length; }
@@ -19,6 +23,7 @@ function controls() {
   $('stop').disabled = !training || stopped;
 }
 function reset() {
+  resultSummary.hidden = true; resultSummary.textContent = '';
   worker?.terminate(); worker = null; training = false; trained = false; stopped = false;
   plane.field = null; plane.probe = null;
   if (chart) { chart.data.labels = []; chart.data.datasets.forEach(d => d.data = []); chart.update(); }
@@ -77,7 +82,7 @@ $('train').onclick = () => {
       chart.data.labels.push(data.epoch); chart.data.datasets[0].data.push(data.loss); chart.data.datasets[1].data.push(data.accuracy * 100);
       if (data.epoch % 5 === 0 || data.epoch === 1) chart.update();
     }
-    if (data.type === 'done') { training = false; trained = true; controls(); chart.update(); $('phase').textContent = stopped ? 'Detenido' : 'Modelo entrenado'; $('epoch-note').textContent = stopped ? 'Detenido por ti' : 'Entrenamiento completado'; message('Ahora elige «Probar» y toca el plano para descubrir qué aprendió la red.'); }
+    if (data.type === 'done') { training = false; trained = true; controls(); chart.update(); $('phase').textContent = stopped ? 'Detenido' : 'Modelo entrenado'; $('epoch-note').textContent = stopped ? 'Detenido por ti' : 'Entrenamiento completado'; resultSummary.textContent = classificationSummary(data.evaluation.correct, data.evaluation.total, { partial: stopped }); resultSummary.hidden = false; message('Elige «Probar» y toca el plano para consultar una predicción nueva.'); }
     if (data.type === 'prediction') { const p = data.probability; $('prediction').textContent = `Predicción: clase ${p >= .5 ? 'B' : 'A'} · P(A) ${((1-p)*100).toFixed(1)}% · P(B) ${(p*100).toFixed(1)}%. Probabilidades estimadas, no certeza.`; }
   };
   worker.postMessage({ type: 'train', config: settings, points });
@@ -92,3 +97,4 @@ import './navigation.js';
 import './compare.js';
 import './about.js';
 import './routes.js';
+import './presentation.js';

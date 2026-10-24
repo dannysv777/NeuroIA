@@ -45,7 +45,7 @@ function finish() {
   if (stopped) { $('compare-status').textContent = 'Comparación detenida. Los resultados son parciales; vuelve a comparar para completar el reto.'; return; }
   const [a,b] = results.map(r => r.validation.correct);
   const success = Math.max(a,b) >= 72;
-  const comparison = a === b ? `Empate: ambas acertaron ${a} de 80.` : `IA ${a > b ? 'A' : 'B'} acertó más: ${Math.max(a,b)} frente a ${Math.min(a,b)} de 80.`;
+  const comparison = a === b ? `Empate: ambas acertaron ${a} de 80 ejemplos nuevos.` : `IA A acertó ${a} de 80 ejemplos nuevos e IA B acertó ${b}. IA ${a > b ? 'A' : 'B'} logró ${Math.abs(a-b)} aciertos más en esta evaluación.`;
   $('compare-status').textContent = `${success ? 'Reto logrado.' : 'Todavía no se alcanza la meta. Prueba otra configuración.'} ${comparison}`;
 }
 $('compare-start').onclick = () => {

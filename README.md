@@ -126,3 +126,9 @@ Al salir de un apartado se solicita detener su entrenamiento al terminar la épo
 En Laboratorio → Comparar dos IA, ambas redes usan los mismos 80 puntos, 120 épocas y semilla 42. Se pueden modificar neuronas y tasa de aprendizaje. Los retos «Separar esquinas» y «Reconocer círculos» piden alcanzar 72 aciertos sobre 80 ejemplos de validación generados con semilla 2026; esos puntos no se usan para entrenar. Solo se declara el reto logrado cuando ambas ejecuciones terminan; detenerlas conserva resultados parciales. Las conclusiones son específicas de este experimento, no un ranking general. Pistas y metodología quedan plegadas para mantener la pantalla sencilla.
 
 La vista `/#acerca-de-mi` contiene los datos del autor proporcionados por Dany S y su enlace de Instagram. La prueba opcional `node tests/compare-check.cjs` comprueba la comparación, las transiciones y esta vista en móvil.
+
+## Resultados y modo exposición
+
+Al terminar, el laboratorio resume aciertos y errores indicando si corresponden al entrenamiento o a ejemplos nuevos. Una prueba detenida se identifica como parcial. La suma explica la distancia al resultado exacto y el error medio de validación; la conclusión se actualiza al cambiar los números.
+
+En Laboratorio y Dentro de la IA, «Modo exposición» amplía los resultados y oculta navegación y controles secundarios sin reiniciar el experimento. «Mostrar controles» recupera los ajustes. «Salir» o Esc vuelve a la vista normal conservando el estado. El modo no necesita permisos de pantalla completa y no se mantiene al cambiar de apartado. La prueba opcional de navegador es `node tests/presentation-check.cjs`.

@@ -1,0 +1,45 @@
+.result-summary { padding:16px 20px; border-left:3px solid #78dce5; border-radius:0 10px 10px 0; background:#16222b; color:#e0edf0; font-size:15px; line-height:1.7; }
+.presentation-entry { display:flex; justify-content:flex-end; margin-bottom:16px; }
+.presentation-enter { font-size:12px; padding:8px 14px; }
+.presentation-bar { position:fixed; inset:0 0 auto; z-index:200; padding:12px 4%; min-height:66px; display:flex; align-items:center; justify-content:space-between; gap:16px; background:#11131cf5; border-bottom:1px solid #625275; }
+.presentation-bar>div { display:flex; gap:10px; }.presentation-bar>strong { font-size:15px; color:#e0d2f2; }
+body.presenting { padding-top:78px; }
+html:has(body.presenting) { scroll-padding-top:90px; }
+body.presenting>header, body.presenting>footer, .presenting .presentation-entry,
+.presenting #laboratorio>.section-heading, .presenting #laboratorio>.lab-modes,
+.presenting #dentro>h2, .presenting #dentro>.inside-intro, .presenting .inside-modes,
+.presenting .guide-intro, .presenting .guide-explanation { display:none; }
+.presenting .lab-section, .presenting .inside-section { max-width:1600px; padding:24px 4%; }
+.presenting .live-lesson { padding:24px; }.presenting .live-network svg { height:280px; }
+.presenting .expected-result strong, .presenting .model-result strong { font-size:26px; }
+.presenting .lamp { font-size:64px; }.presenting .lesson-caption,.presenting .compare-status { font-size:18px; line-height:1.6; }
+.presenting .lesson-progress { font-size:15px; }.presenting .sum-results strong { font-size:48px; }
+.presenting .sum-results span,.presenting .sum-results small { font-size:13px; }
+.presenting .result-summary { font-size:18px; }.presenting .operation-result { font-size:30px; }
+.presenting .compare-result strong { font-size:36px; }.presenting .compare-result span { font-size:15px; }
+.presenting .chart-wrap { height:240px; }
+.presenting:not(.presentation-controls-open) .speed-label,
+.presenting:not(.presentation-controls-open) .slow-toggle,
+.presenting:not(.presentation-controls-open) .compare-settings,
+.presenting:not(.presentation-controls-open) .compare-heading>label,
+.presenting:not(.presentation-controls-open) #comparison details,
+.presenting:not(.presentation-controls-open) .challenge-brief details,
+.presenting:not(.presentation-controls-open) .addition-lesson>details,
+.presenting:not(.presentation-controls-open) .addition-lesson .guide-details>div:not(.sum-chart-box),
+.presenting:not(.presentation-controls-open) .controls>:not(#train):not(.action-row),
+.presenting:not(.presentation-controls-open) .lab-layout>.guide-explanation { display:none; }
+.presenting:not(.presentation-controls-open) .lab-layout { grid-template-columns:minmax(0,1fr); }
+.presenting:not(.presentation-controls-open) .controls { display:flex; gap:12px; align-items:center; }
+.presenting:not(.presentation-controls-open) .controls>#train { width:auto; margin:0; }
+.presenting:not(.presentation-controls-open) .addition-lesson .guide-details { grid-template-columns:minmax(0,1fr); }
+.presenting .sum-chart-box { min-width:0; }.presenting .sum-chart-box .chart-wrap { height:240px; }
+@media(max-width:680px) {
+  .presentation-bar { padding:10px 3%; gap:8px; flex-wrap:wrap; }.presentation-bar>strong { font-size:12px; }
+  .presentation-bar .button { font-size:11px; padding:8px; }.presentation-bar>div { gap:6px; }
+  body.presenting { padding-top:100px; }.presenting .live-network svg { height:190px; }
+  html:has(body.presenting) { scroll-padding-top:110px; }
+  .presenting .live-lesson { padding:14px; }.presenting .lamp { font-size:40px; }
+  .presenting .sum-results strong { font-size:24px; }.presenting .sum-results span,.presenting .sum-results small { font-size:10px; }
+  .presenting .lesson-progress { font-size:12px; }.presenting .lesson-caption,.presenting .result-summary { font-size:15px; }
+  .presenting .operation-result { font-size:22px; }.presenting:not(.presentation-controls-open) .controls { flex-wrap:wrap; }
+}

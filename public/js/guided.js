@@ -1,3 +1,4 @@
+import { classificationSummary } from './results.js';
 const cases = [[0, 0], [0, 1], [1, 0], [1, 1]];
 const probes = cases.map(row => row.map(v => v ? .7 : -.7));
 const expected = cases.map(([a, b]) => a !== b ? 1 : 0);
@@ -66,7 +67,7 @@ $('guide-reset').onclick = reset;
 $('guide-stop').onclick = () => { stopped = true; worker?.postMessage({ type: 'stop' }); controls(); $('guide-state').textContent = 'Deteniendo…'; };
 $('guide-train').onclick = () => {
   reset(); busy = true; controls(); $('guide-state').textContent = 'Preparando el modelo…';
-  $('live-lesson').scrollIntoView({ behavior: 'instant', block: 'start' });
+  $(document.body.classList.contains('presenting') ? 'guided' : 'live-lesson').scrollIntoView({ behavior: 'instant', block: 'start' });
   function fail(text) { worker?.terminate(); busy = false; controls(); $('guide-state').textContent = 'No se pudo completar el entrenamiento'; $('guide-caption').textContent = text; }
   try { worker = new Worker('/js/worker.js'); } catch(error) { fail(error.message); return; }
   worker.onerror = () => fail('No se pudo cargar TensorFlow.js. Comprueba que el servidor local siga activo y recarga.');
@@ -82,7 +83,7 @@ $('guide-train').onclick = () => {
       $('guide-caption').textContent = epoch ? 'La red predice, compara con la regla y ajusta sus pesos. Cambia los interruptores para seguir otro caso.' : 'Estos son los pesos iniciales. Una respuesta correcta aquí puede ser casualidad.';
       render();
     }
-    if (data.type === 'done') { busy = false; controls(); $('guide-state').textContent = stopped ? `Detenido en la época ${epoch}` : 'Entrenamiento terminado'; $('guide-caption').textContent = 'Prueba las cuatro combinaciones. El modelo aprende de ejemplos; no comprende una lámpara física. La probabilidad no es una garantía.'; }
+    if (data.type === 'done') { busy = false; controls(); $('guide-state').textContent = stopped ? `Detenido en la época ${epoch}` : 'Entrenamiento terminado'; $('guide-caption').textContent = classificationSummary(data.evaluation.correct, data.evaluation.total, { partial: stopped }) + ' Cambia los interruptores para revisar cada caso.'; }
   };
   worker.postMessage({ type: 'train', points, probes, delay: Number($('guide-speed').value), config: { neurons: 8, rate: .03, epochs: 200, seed: 42 } });
 };

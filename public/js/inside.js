@@ -1,4 +1,5 @@
 import { neuron, additionData, additionPrediction } from './arithmetic.js';
+import { sumSummary } from './results.js';
 const section = document.createElement('section'); section.id = 'dentro'; section.className = 'inside-section';
 section.innerHTML = `
 <h2>Dentro de la IA</h2><p class="inside-intro">Primero calcula una neurona. Después descubre cómo el entrenamiento encuentra sus pesos para aproximar una suma.</p>
@@ -15,6 +16,9 @@ section.innerHTML = `
 <details id="source-details"><summary>Ver el archivo real del motor de cálculo</summary><p>Lectura del archivo que usa esta aplicación. Los fragmentos de arriba omiten gestión de memoria y mensajes para facilitar la explicación.</p><pre id="source-code" class="code-view">Abre este apartado para cargar el archivo.</pre><a class="text-link" href="/js/arithmetic.js" target="_blank" rel="noopener">Abrir arithmetic.js ↗</a></details>
 <p class="guide-explanation">Este experimento usa <strong>una neurona lineal</strong>: sumar es una relación lineal y no requiere una red grande. Aprender una aproximación no convierte a una red en una calculadora exacta. El error de validación usa 24 ejemplos que no se utilizaron para ajustar los pesos.</p></section>`;
 document.getElementById('como-funciona').before(section);
+const sumResult = document.createElement('p'); sumResult.id = 'sum-summary'; sumResult.className = 'result-summary'; sumResult.hidden = true; sumResult.setAttribute('role', 'status');
+section.querySelector('.sum-results').after(sumResult);
+let resultReady = false, partialResult = false;
 const nav = document.createElement('a'); nav.href = '#dentro'; nav.textContent = 'Dentro de la IA'; document.querySelector('nav').append(nav);
 const $ = id => document.getElementById(id), fmt = n => Number(n.toFixed(4)).toString();
 let step = 0, snapshot, history = [], worker, busy = false, chart;
@@ -44,17 +48,19 @@ $('sum-examples').textContent = additionData().map(p => `${p.a} + ${p.b} → ${f
 $('source-details').addEventListener('toggle', async () => { if (!$('source-details').open) return; try { const response = await fetch('/js/arithmetic.js'); if (!response.ok) throw new Error(); $('source-code').textContent = await response.text(); } catch { $('source-code').textContent = 'No se pudo cargar el archivo. Comprueba el servidor y vuelve a abrir este apartado.'; } });
 try { chart = new Chart($('sum-chart'), { type: 'line', data: {labels:[], datasets:[{ label:'Predicción IA',data:[],borderColor:'#58dbed',pointRadius:0,borderWidth:2 },{ label:'Suma exacta',data:[],borderColor:'#c8b2f4',borderDash:[5,5],pointRadius:0,borderWidth:1 }]}, options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:'#bbb5ce',boxWidth:12}}},scales:{x:{ticks:{maxTicksLimit:5,color:'#999fb4'},title:{display:true,text:'Época',color:'#999fb4'}},y:{ticks:{color:'#999fb4'}}}} }); } catch { $('sum-state').textContent = 'No se cargaron las gráficas. Recarga la página.'; }
 function renderSum() {
+  sumResult.hidden = true;
   const a = $('sum-a').value === '' ? NaN : Number($('sum-a').value), b = $('sum-b').value === '' ? NaN : Number($('sum-b').value);
   if (![a,b].every(v => Number.isFinite(v) && Math.abs(v)<=10)) { $('sum-exact').textContent='—'; $('sum-prediction').textContent='—'; $('sum-error').textContent='—'; $('sum-formula').textContent='Introduce dos números entre −10 y 10.'; if(chart){chart.data.labels=[];chart.data.datasets.forEach(d=>d.data=[]);chart.update();} return; }
   $('sum-exact').textContent=fmt(a+b);
   const prediction = snapshot ? additionPrediction(snapshot,a,b) : null;
   $('sum-prediction').textContent=prediction===null?'—':prediction.toFixed(4);
   $('sum-error').textContent=prediction===null?'—':Math.abs(prediction-a-b).toFixed(4);
+  if(resultReady && prediction !== null) { sumResult.textContent = sumSummary(a+b, prediction, snapshot.validationMAE, { partial: partialResult }); sumResult.hidden = false; }
   $('sum-formula').textContent=snapshot ? `((${a} ÷ 10) × ${fmt(snapshot.weights[0])} + (${b} ÷ 10) × ${fmt(snapshot.weights[1])} + ${fmt(snapshot.bias)}) × 20 ≈ ${prediction.toFixed(4)} · pesos mostrados redondeados` : 'Los pesos aparecerán al crear el modelo.';
   if(chart){chart.data.labels=history.map(h=>h.epoch);chart.data.datasets[0].data=history.map(h=>additionPrediction(h,a,b));chart.data.datasets[1].data=history.map(()=>a+b);chart.update();}
 }
 function controls(){ $('sum-train').disabled=busy||!chart; $('sum-stop').disabled=!busy; $('sum-slow').disabled=busy; }
-function reset(){worker?.terminate();worker=null;busy=false;snapshot=null;history=[];$('sum-epoch').textContent='Época 0 / 180';$('sum-progress').value=0;$('sum-validation').textContent='Error en 24 ejemplos nuevos: —';$('sum-state').textContent='Pulsa «Entrenar suma» para empezar desde los mismos pesos iniciales.';controls();renderSum();}
+function reset(){resultReady=false;partialResult=false;worker?.terminate();worker=null;busy=false;snapshot=null;history=[];$('sum-epoch').textContent='Época 0 / 180';$('sum-progress').value=0;$('sum-validation').textContent='Error en 24 ejemplos nuevos: —';$('sum-state').textContent='Pulsa «Entrenar suma» para empezar desde los mismos pesos iniciales.';controls();renderSum();}
 $('sum-a').oninput=renderSum;$('sum-b').oninput=renderSum;$('sum-reset').onclick=reset;
 $('sum-stop').onclick=()=>{worker?.postMessage({type:'stop'});$('sum-stop').disabled=true;$('sum-state').textContent='Deteniendo después de la época actual…';};
 $('sum-train').onclick=()=>{
@@ -65,7 +71,7 @@ $('sum-train').onclick=()=>{
   worker.onmessage=({data})=>{
     if(data.type==='error'){fail(data.message);return;}
     if(data.type==='snapshot'){snapshot=data;history.push(data);$('sum-epoch').textContent=`Época ${data.epoch} / 180`;$('sum-progress').value=data.epoch;$('sum-state').textContent=data.epoch?'Aprendiendo: ajustando pesos para reducir el error.':'Antes de aprender: esta es la predicción inicial.';if(data.validationMAE!==undefined)$('sum-validation').textContent=`Error medio en 24 ejemplos nuevos: ${data.validationMAE.toFixed(4)}`;renderSum();}
-    if(data.type==='done'){busy=false;controls();$('sum-state').textContent=data.stopped?'Entrenamiento detenido. Puedes probar otros números con los pesos actuales.':'Entrenamiento terminado. Prueba otros números y compara la aproximación.';worker.terminate();worker=null;}
+    if(data.type==='done'){busy=false;resultReady=true;partialResult=data.stopped;controls();renderSum();$('sum-state').textContent=data.stopped?'Entrenamiento detenido. Puedes probar otros números con los pesos actuales.':'Entrenamiento terminado. Prueba otros números y compara la aproximación.';worker.terminate();worker=null;}
   };
   worker.postMessage({type:'train',slow:$('sum-slow').checked});
 };
