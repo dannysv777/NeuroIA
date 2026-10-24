@@ -22,7 +22,7 @@ guide.innerHTML = `
   <p class="guide-explanation"><strong>¿Y los puntos?</strong> Un punto es un ejemplo: su posición horizontal representa la primera entrada, la vertical la segunda y su color la respuesta correcta. Aquí sustituimos esos puntos abstractos por interruptores y una lámpara. Esta regla se llama <strong>XOR</strong>.</p>`;
 free.before(modes, guide); free.hidden = true;
 const explanation = document.createElement('p'); explanation.className = 'guide-explanation';
-explanation.textContent = 'Cada punto es un ejemplo que tú enseñas: X e Y son dos características numéricas y su color es la categoría correcta (A o B). No representan objetos concretos en este modo libre. El fondo aparece al entrenar y muestra qué categoría predice la red para cada posición. Las gráficas y métricas están debajo del plano.';
+explanation.textContent = 'Clasifica piezas ficticias por tamaño y peso. Empieza observando un ejemplo; después entrena y prueba una pieza nueva.';
 free.prepend(explanation);
 const $ = id => document.getElementById(id);
 let worker, trace, history = [], busy = false, stopped = false, index = 1, epoch = 0;

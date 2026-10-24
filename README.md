@@ -132,3 +132,9 @@ La vista `/#acerca-de-mi` contiene los datos del autor proporcionados por Dany S
 Al terminar, el laboratorio resume aciertos y errores indicando si corresponden al entrenamiento o a ejemplos nuevos. Una prueba detenida se identifica como parcial. La suma explica la distancia al resultado exacto y el error medio de validación; la conclusión se actualiza al cambiar los números.
 
 En Laboratorio y Dentro de la IA, «Modo exposición» amplía los resultados y oculta navegación y controles secundarios sin reiniciar el experimento. «Mostrar controles» recupera los ajustes. «Salir» o Esc vuelve a la vista normal conservando el estado. El modo no necesita permisos de pantalla completa y no se mantiene al cambiar de apartado. La prueba opcional de navegador es `node tests/presentation-check.cjs`.
+
+## Entender los puntos
+
+El modo libre presenta piezas ficticias: X se explica como tamaño y Y como peso, ambos en una escala relativa de 0 a 100. Es una interpretación didáctica de los mismos datos sintéticos; el modelo sigue recibiendo coordenadas normalizadas. Los colores son etiquetas A/B asignadas para practicar, no categorías físicas reales.
+
+«Ver ejemplo» inspecciona puntos sin modificar datos ni reiniciar el modelo; el botón del plano permite recorrerlos también con teclado. «Probar» muestra una pieza sin etiqueta y la predicción del modelo, sin añadirla al entrenamiento. Para agregar datos hay que elegir explícitamente A o B.

@@ -15,7 +15,7 @@ const fs = require('node:fs');
     assert.equal(await page.locator('#accuracy').textContent(), '100.0%');
     await page.locator('[data-mode="test"]').click();
     await page.locator('#plane').click({ position: { x: 100, y: 100 } });
-    await page.waitForFunction(() => document.getElementById('prediction').textContent.includes('P(A)'));
+    await page.waitForFunction(() => document.getElementById('prediction').textContent.includes('Probabilidad de A'));
     fs.mkdirSync('artifacts', { recursive: true });
     await page.screenshot({ path: 'artifacts/desktop.png', fullPage: true });
     await page.locator('#reset').click();

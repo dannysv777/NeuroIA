@@ -13,6 +13,7 @@ const assert = require('node:assert/strict');
     await page.goto('http://localhost:3000'); await visible('inicio');
     await page.locator('.destination-card[href="#laboratorio"]').click(); await visible('laboratorio');
     await page.locator('#free-tab').click();
+    await page.locator('[data-mode="0"]').click();
     await page.locator('#plane').click({ position: { x: 70, y: 70 } });
     assert.equal(await page.locator('#point-count').textContent(), '81');
     await page.locator('header nav a[href="#dentro"]').click(); await visible('dentro');
